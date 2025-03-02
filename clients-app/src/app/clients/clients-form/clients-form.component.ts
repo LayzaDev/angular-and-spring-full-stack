@@ -13,6 +13,7 @@ export class ClientsFormComponent implements OnInit {
   client: Client;
   success: boolean = false;
   errors: String[];
+  id: number;
 
   constructor( 
     private service : ClientsService, 
@@ -23,14 +24,17 @@ export class ClientsFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let params = this.activatedRoute.params
-    if(params && params.value && params.value.id){
-      this.id = params.value.id;
-      this.service.getClientById(this.id)
-        .subscribe( response => this.client = response,
-          errorResponse => this.client = new Client()
-        )
-    }
+    this.activatedRoute.params.subscribe(params => {
+      if(params && params[ 'id' ]){
+        this.id = params[ 'id' ];
+        this.service.getClientById(this.id)
+          .subscribe( 
+            response => this.client = response,
+            errorResponse => this.client = new Client()
+          );
+      }
+      
+    });
   }
 
   onSubmit(){
