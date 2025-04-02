@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Client } from '../client';
-import { ClientsService } from 'src/app/clients.service';
+import { ClientsService } from 'src/app/clients/clients.service';
+import { error } from 'console';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-clients-form',
@@ -24,30 +26,42 @@ export class ClientsFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
-      if(params && params[ 'id' ]){
-        this.id = params[ 'id' ];
-        this.service.getClientById(this.id)
+    let params : Observable<Params> = this.activatedRoute.params
+    params.subscribe( urlParams => {
+      this.id = urlParams['id'];
+      if(this.id){
+        this.service
+          .getClientById(this.id)
           .subscribe( 
             response => this.client = response,
             errorResponse => this.client = new Client()
           );
       }
-      
-    });
+    })
   }
 
   onSubmit(){
-    this.service
-      .save(this.client)
-      .subscribe(response => {
-        this.success = true;
-        this.errors = null;
-        this.client = response;
-      }, errorResponse => {
-        this.success = false;
-        this.errors = errorResponse.error.errors;
-      })
+    if(this.id){
+      this.service
+        .update(this.client)
+        .subscribe(response => {
+          this.success = true;
+            this.errors = null;
+        }, errorResponse => {
+          this.errors = ['Erro ao tentar atualizar o cliente.']
+        })
+    } else {
+      this.service
+        .save(this.client)
+        .subscribe(response => {
+          this.success = true;
+          this.errors = null;
+          this.client = response;
+        }, errorResponse => {
+          this.success = false;
+          this.errors = errorResponse.error.errors;
+        })
+    }
   }
 
   returnToListScreen(){

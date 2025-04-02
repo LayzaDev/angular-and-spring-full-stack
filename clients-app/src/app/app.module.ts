@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ClientsModule } from './clients/clients.module';
 import { TemplateModule } from './template/template.module';
 
-import { ClientsService } from './clients.service';
+import { ClientsService } from './clients/clients.service';
 
 @NgModule({
   declarations: [

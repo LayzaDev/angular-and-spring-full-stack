@@ -3,8 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  API_URL_DEV: '',
-  API_URL_PROD: ''
+  API_URL_DEV: 'http://3.84.68.244:8080/api/clients',
+  API_URL_PROD: 'http://3.84.68.244:8080/api/clients'
 };
 
 /*
